@@ -22,6 +22,14 @@ There is only single color used in this chart which is easy on eyes. Color here
 represents the area under the graph.
 
 
+**Task Choice**
+While working on the two charts on D3, I also noticed that variation in range of
+data available on each patient. This stuck me as weird. Since, the data we are
+using is not coherent at all, it might not give us any good correlations between
+any two attributes. Hence, I came up with difference graph trying to represent
+the diagnosis data range available with each patient. Patients number are
+sorted according to the date of encounter with first TBI.
+
 **Is Processing good for this chart?**
 No, Processing is not very good for charting purposes. Processing is far better
 to create more complex simulations, renders in both 2D and 3D space. Using it
