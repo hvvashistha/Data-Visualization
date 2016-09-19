@@ -2,7 +2,7 @@ Steps to reproduce:
 ---------------
     Select application folder based on your system platform.
     Run differenceGraph application.
-    This application rotates view with mouse, so, do try different perspectives.
+    This representation rotates view with mouse, so, do try different perspectives.
 
 Note: There are also screenshots present in ./screenshots directory in case it
 doesn't work.
