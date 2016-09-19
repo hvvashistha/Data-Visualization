@@ -24,6 +24,18 @@ an attempt to moderate excessively inflated bubbles.
 to the information. It was created so as to answer the question:
 How trauma occurrences differ by gender?
 
+**Task Choice**
+I started with sorting and consolidating data in excel sheet provided based on
+age and trauma flags. It was apparent that same patient has gone through
+multiple diagnosis during span of 500 to 3000 days depending on data
+availability.
+Representing trauma diagnosis on age buckets was obvious next thing.
+I came up with a bar chart, after which I further divided the scale on the basis
+of gender creating a grouped bar chart. Scatter plot was the next choice for
+representation since it can easily accommodate the third dimension and is very
+easy to read without much mental mapping.
+
+
 **Color choice?**
 Colors in this chart are picked up from D3's in built category20() color
 scale. This scale is used because the colors in it are well differentiated
