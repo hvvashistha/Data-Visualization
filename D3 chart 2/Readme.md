@@ -22,6 +22,14 @@ are also well differentiated but with larger buckets. That is, colors used
 in category10 are more easily differentiated because of less number of
 buckets and hence larger distances between colors.
 
+**Task Choice**
+After creating the first chart, it was quite noticeable that anxiety and
+depression was a very common occurrence within same patients.
+I picked up these two diagnosis and generated a graph between number of
+encounters and each patient trying to represent the correlation between these
+two. Grouped bar chart was the tool of choice for this one since my third
+dimension contains just two attributes(Anxiety and depression).
+
 **Is D3 good for this chart?**
 As with last chart, the same answer goes for this one also.
 D3 is an excellent choice for these types of charts/representations.
