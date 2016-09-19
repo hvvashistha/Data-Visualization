@@ -1,4 +1,4 @@
-# dataViz_hw1
+# Data Visualization, Assignment 1
 Repository of data visualization projects
 
 Tool Review
