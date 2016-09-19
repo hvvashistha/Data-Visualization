@@ -26,7 +26,7 @@ buckets and hence larger distances between colors.
 After creating the first chart, it was quite noticeable that anxiety and
 depression was a very common occurrence within same patients.
 I picked up these two diagnosis and generated a graph between number of
-encounters and each patient trying to represent the correlation between these
+encounters and each patient, trying to represent the correlation between these
 two. Grouped bar chart was the tool of choice for this one since my third
 dimension contains just two attributes(Anxiety and depression).
 
