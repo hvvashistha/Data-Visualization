@@ -88,7 +88,7 @@ void legend(){
   
   fill(255);
   textSize(30);
-  text("[0,1]->[5,0]^3", legendX - 100, -130, legendZ);
+  text("[0,1]->[0, 5]^3", legendX - 100, -130, legendZ);
   textSize(40);
   text("0", legendX - (legendLen/2) - 40, -70, legendZ);
   

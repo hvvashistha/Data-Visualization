@@ -15,7 +15,7 @@ JUSTIFICATIONS:
 to visualize mTBI matrix as a 3D representation, and two determine feasibilities
 of 3D charts for such kind of data.
 Color representation for FA values are scaled from
-[0,1] -> [5, 0] and raised to power 3. This is done because most FA values
+[0,1] -> [0, 5] and raised to power 3. This is done because most FA values
 present in dataset are < 0.5, scaling them this way increases the depth of these
 values much more than 0s, which are not needed in visualization.
 
