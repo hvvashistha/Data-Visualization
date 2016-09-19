@@ -27,14 +27,14 @@ zero and non-zero values than any other color.
 
 **Task Choice**
 The representation of FA values for diffusion tensor data TA came up with was
-also the first representation I picked when I started with the assignment 1.
-Since, the FA values were clustered in very thin lines, representing it with
-monotonically increasing color was not very intuitive as everything was
-perceived as same and more of an outline to the data. Hence, I tried to
-represent them as topographic profile. 2D graphs tend to hide structures behind
-each other. Hence, I went with representing it in 3D, keeping it interactive to
-provide different perspective. This was also my first dive into drawing anything
-in 3D.
+also the first representation I did when I started with assignment 1.
+But the FA values were clustered in very thin lines, representing it with
+monotonically increasing color mapped to FA values was not very intuitive as
+everything was perceived as same and more of an outline to the data. Hence, I
+tried to represent them as topographic profile. Between @d and 3D, 2D graphs tend
+to hide structures behind each other. Hence, I went with representing it in 3D,
+keeping it interactive to provide different perspective. This was also my first
+dive into drawing anything in 3D.
 
 **Is Processing good for this chart?**
 Yes, Processing is excellent for learning and starting with 3D representations
