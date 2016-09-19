@@ -1,0 +1,91 @@
+body {
+    width:100%;
+    height:100%;
+    margin: 0;
+    background: #fefefe;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    color: #666;
+}
+
+text {
+    font-size: 0.8em;
+    fill: #888;
+}
+
+#viz {
+    position: relative;
+    margin: 2% 5% 0;
+    width: 90%;
+    height: 70%;
+}
+
+#vizCanvas {
+    width: 100%;
+    height: 100%;
+}
+
+.axis line, .axis path {
+    stroke-width: 1px;
+    stroke: #000;
+    opacity: 0.4;
+}
+
+.diagnosis {
+    opacity: 0.8;
+    transition: 1s;
+    cursor: pointer;
+}
+
+.genderlane {
+    stroke: #efefef;
+    fill: transparent;
+    opacity: 0.5;
+}
+
+.bubbleOutliner {
+    stroke-width: 4px;
+    opacity: 0;
+}
+
+.legends {
+    margin: 1em 0;
+}
+
+.legend {
+    display: inline-block;
+    padding: 5px;
+    font-size: 0.8em;
+}
+
+.tile {
+    display: inline-block;
+    margin: -0.1em 5px;
+    width: 1em;
+    height: 1em;
+    line-height: 5.1em;
+}
+
+.text {
+    display: inline;
+}
+
+.diagnosis.hover{
+    opacity: 0.02;
+}
+
+.diagnosis.hover.bubbleOutliner {
+    opacity: 0;
+}
+
+.diagnosis.hover.active {
+    opacity: 1;
+    transition: .4s;
+}
+
+.description {
+    padding: 30px;
+}
