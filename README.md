@@ -1,27 +1,7 @@
-# Data Visualization, Assignment 1
-Repository of data visualization projects
+# Data Visualization
 
-Tool Review
-----------
-  * D3
-  * Processing
+Assignment 1
+Folder : Project1
 
-Visualization 1
-----------
-  * Folder: D3 chart1
-  * Tool: D3
-
-Visualization 2
-----------
-  * Folder: D3 chart 2
-  * Tool: D3
-
-Visualization 3
-----------
-  * Folder: differenceGraph
-  * Tool: Processing 3, IDE
-
-Visualization 4:
-----------
-  * Folder: brainMap
-  * Tool: Processing 3, IDE
+Assignment 2
+Folder : Project2
