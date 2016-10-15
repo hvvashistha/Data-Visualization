@@ -1,0 +1,129 @@
+body {
+    width:100%;
+    height:100%;
+    margin: 0;
+    background: #fefefe;
+    text-align: left;
+}
+
+h2 {
+    text-align: center;
+    color: #666;
+    margin: 10px 0 0;
+}
+
+text {
+    fill: #888;
+}
+
+#viz {
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    padding: 0px 0 15px;
+    height: 45%;
+}
+
+#vizCanvas{
+    /*shape-rendering: crispEdges;*/
+}
+
+.boxWhiskers.focus {
+    opacity: 1!important;
+}
+
+.boxWhiskers rect {
+    stroke-width: 1;
+    stroke: #949494;
+}
+
+.boxWhiskers line {
+    stroke: #000;
+    stroke-width: 1px;
+    fill: transparent;
+}
+
+.boxWhiskers line.whiskerMedian {
+    opacity: 0.5;
+}
+
+.boxWhiskers line.whiskerExtremes {
+    stroke-width: 1px;
+    stroke-dasharray: 3 1;
+    stroke: #6d6d6d;
+}
+
+.axis {
+    stroke-width: 1px;
+    fill: transparent;
+}
+
+.axis text {
+    stroke-width: 0;
+    fill: #000;
+    font-size: 0.7em;
+}
+
+.y.axis {
+    stroke: #000;
+}
+
+.dash {
+    text-align: center;
+}
+
+.dash div{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.links{
+    stroke-width: 1px;
+    opacity: 0.8;
+}
+
+.links.focus{
+    opacity: 1!important;
+    stroke-width: 2px;
+}
+
+.legends, .controls {
+    text-align: left;
+    cursor: pointer;
+    height: 100%;
+    overflow: auto;
+}
+
+.legendRow {
+    padding: 0 20px;
+    display: block !important;
+    opacity: 0.8;
+}
+
+.legendRow.focus{
+    opacity: 1;
+    background-color: #eee;
+}
+
+.legendRow .tile{
+    width: 40px;
+    height: 10px;
+}
+
+.legendRow.inactive .tile{
+    background-color: #666 !important;
+}
+
+.legendRow .legendName{
+    display: inline-block;
+    font-size: 12px;
+    padding: 0 10px;
+}
+
+.legendRow.inactive .legendName{
+    color: #ccc !important;
+}
+
+.description{
+    padding: 20px;
+}
