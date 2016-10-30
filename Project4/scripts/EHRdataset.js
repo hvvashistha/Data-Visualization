@@ -8,6 +8,7 @@ function EHRdataset(callback) {
     var patients = [];
     var maxLeft = 0, maxRight = 0;
     var leftItemCount, rightItemCount;
+    var maxPreTBI = 0, maxPostTBI = 0;
     // Assuming data is pre-sorted by PatientID and then by Days_From1stTBI
     for(var patient in parsedCSV) {
 
@@ -42,7 +43,8 @@ function EHRdataset(callback) {
             }
         }
 
-        if (data.encounters.length > 0) {
+        if (data.encounters.length > 0 &&
+            (thisPatient.encounters.length === 0 || thisPatient.encounters[thisPatient.encounters.length - 1] !== data)) {
             if (data.daysFromTBI < 0) {
                 leftItemCount++;
                 thisPatient.leftItems = leftItemCount;
@@ -51,6 +53,8 @@ function EHRdataset(callback) {
             }
             maxLeft = Math.max(maxLeft, leftItemCount);
             maxRight = Math.max(maxRight, rightItemCount);
+            maxPreTBI = Math.min(data.daysFromTBI, maxPreTBI);
+            maxPostTBI = Math.max(data.daysFromTBI, maxPostTBI);
             thisPatient.encounters.push(data);
         }
     }
@@ -69,6 +73,8 @@ function EHRdataset(callback) {
     var d3Data = {
         maxLeft: maxLeft,
         maxRight: maxRight,
+        maxPreTBIDays: -maxPreTBI,
+        maxPostTBIDays: maxPostTBI,
         patients: patients
     };
 

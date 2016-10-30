@@ -1,15 +1,35 @@
-var hMargins = 60;
-var vMargins = 20;
-var minPixelWidth = 12;
-var cellPadding = 1;
+var hMargins = [40, 40],
+    vMargins = [5, 20];
+var minHPixelWidth = 4,
+    minVPixelWidth = 15;
+var cellPadding = 0.5;
+
+// Ref:
+// Implementation by Pimp Trizkit : shadeColor2()
+// https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+function shade(color, percent) {
+    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+}
 
 $(function(){
     EHRdataset(function(data){
-        var width = innerWidth - 2 * hMargins,
-            height = innerHeight - 2 * hMargins;
+        var width = innerWidth - $("#viz").offset().left - hMargins[0] - hMargins[1],
+            height = innerHeight - $("#viz").offset().top - $(".dash").height() - vMargins[0] - vMargins[1] - 40;
 
         var yScale = d3.scale.ordinal();
-        var color = d3.scale.category20();
+
+        function color(encounters, step){
+            return shade(color.colors(encounters), color.scale(step || 0));
+        }
+
+        color.colors = d3.scale.category20();
+        color.scale = d3.scale.linear().domain([-data.maxPreTBIDays, data.maxPostTBIDays]).range([-0.85, 0.6]);
+
+        //Remove unwanted colors
+        color.colors.range().splice(color.colors.range().indexOf("#7f7f7f"), 1);
+        color.colors.range().splice(color.colors.range().indexOf("#c7c7c7"), 1);
+        color.colors.range().splice(color.colors.range().indexOf("#c5b0d5"), 1);
 
         yScale.domain(data.patients.map(function(d){
            return d.patientID;
@@ -18,14 +38,8 @@ $(function(){
         var vItemCount = yScale.domain().length;
         var hItemCount = data.maxLeft + data.maxRight;
 
-        var hPixelPerItem = Math.max(width / hItemCount, minPixelWidth),
-            vPixelPerItem = Math.max(height / vItemCount, minPixelWidth);
-
-        if (hPixelPerItem > vPixelPerItem) {
-            hPixelPerItem = vPixelPerItem;
-        } else if (hPixelPerItem < vPixelPerItem) {
-            vPixelPerItem = hPixelPerItem;
-        }
+        var hPixelPerItem = Math.max(width / hItemCount, minHPixelWidth),
+            vPixelPerItem = Math.max(height / vItemCount, minVPixelWidth);
 
         height = vPixelPerItem * vItemCount;
         width =  hPixelPerItem * hItemCount;
@@ -36,7 +50,7 @@ $(function(){
 
         var xScale = d3.scale.linear();
 
-        xScale.domain([-data.maxLeft, data.maxRight])
+        xScale.domain([0, data.maxLeft + data.maxRight])
             .range([0, width]);
 
         var yAxis = d3.svg.axis()
@@ -45,18 +59,20 @@ $(function(){
             .tickFormat(function(d){
                 return d;
             })
+            .tickSize(0)
             .scale(yScale);
 
         var xAxis = d3.svg.axis()
             .orient("bottom")
+            .ticks(0)
             .scale(xScale);
 
         var svg = d3.select("#vizCanvas")
-            .attr("width", width + 2 * hMargins)
-            .attr("height", height + 2 * vMargins)
+            .attr("width", width + hMargins.reduce(function(a,b) {return a + b;}))
+            .attr("height", height + vMargins.reduce(function(a,b) {return a + b;}))
             .append("g")
                 .attr("class", "drawingCanvas")
-                .attr("transform", "translate(" + hMargins + "," + vMargins + ")");
+                .attr("transform", "translate(" + hMargins[0] + "," + vMargins[0] + ")");
 
         var patients = svg.selectAll(".row")
             .data(data.patients, function(d){
@@ -75,7 +91,23 @@ $(function(){
 
         var encountersDays = patients.selectAll(".encounter.day")
             .data(function(d){
-                return d.encounters;
+                var normalizedData = [];
+                var leftAdjust = data.maxLeft - d3.select(this.parentNode).datum().leftItems,
+                    rightAdjust = xScale.domain()[1] - (d.encounters.length + leftAdjust);
+                for (var i = 0; i < leftAdjust; i++){
+                    normalizedData.push({ daysFromTBI: 'la'+i,
+                                encounters: [false]
+                            });
+                }
+                normalizedData = normalizedData.concat(d.encounters);
+                for (var i = 0; i < rightAdjust; i++){
+                    normalizedData.push({ daysFromTBI: 'ra'+i,
+                                encounters: [false]
+                            });
+                }
+                return normalizedData;
+            }, function(d, i){
+                return d.daysFromTBI;
             });
 
         encountersDays.enter()
@@ -85,7 +117,7 @@ $(function(){
             });
 
         encountersDays.attr("transform", function(d, i){
-                return "translate(" + xScale(i - d3.select(this.parentElement).datum().leftItems) + ",0)";
+                return "translate(" + xScale(i) + ",0)";
             });
 
         var encounterCell = encountersDays.selectAll(".encounter.cell")
@@ -100,18 +132,18 @@ $(function(){
             });
 
         encounterCell
-            .attr("x", function(d){
+            .attr("y", function(d){
                 var encounters = d3.select(this.parentElement).datum().encounters;
-                var width = (hPixelPerItem - cellPadding * 2)/encounters.length;
-                return cellPadding + width * encounters.indexOf(d);
+                var subCellHeight = (vPixelPerItem - cellPadding * 2)/encounters.length;
+                return cellPadding + subCellHeight * encounters.indexOf(d);
             })
-            .attr("y", 0)
-            .attr("height", rowHeight)
-            .attr("width", function(d){
-                return (hPixelPerItem - cellPadding * 2)/d3.select(this.parentElement).datum().encounters.length;
+            .attr("x", 0)
+            .attr("width", (hPixelPerItem - cellPadding * 2))
+            .attr("height", function(d){
+                return (vPixelPerItem - cellPadding * 2)/d3.select(this.parentElement).datum().encounters.length;
             })
             .attr("fill", function(d){
-                return color(d);
+                return d === false ? "#FFF" : color(d, d3.select(this.parentNode).datum().daysFromTBI);
             });
 
         encounterCell.exit().remove();
@@ -129,7 +161,6 @@ $(function(){
             .attr("class", "y axis")
             .call(yAxis);
 
-
         // svg.append("line")
         //     .attr("class", "TBImark")
         //     .attr("x1", xScale(0))
@@ -138,5 +169,45 @@ $(function(){
         //     .attr("y2", height)
         //     .attr("stroke", "#000")
         //     .attr("stroke-width", "1");
+
+        var encounterLegends = d3.select(".legends.primary .legendsBody")
+            .selectAll(".legendCell")
+            .data(encounters);
+
+        encounterLegends.enter()
+            .append("div")
+            .attr("class", function(d){
+                return "legendCell " + d;
+            })
+            .each(function(d){
+                var parent = d3.select(this);
+
+                parent.append("div")
+                    .attr("class", "colorTile cell " + d)
+                    .style("background", color(d));
+
+                parent.append("div")
+                    .attr("class", "legendText")
+                    .text(d);
+            });
+
+        encounterLegends.on("mouseover", function(d){
+            $(".cell").removeClass("active").addClass("cellHover");
+            $(".cell." + d).addClass("active");
+        });
+
+        encounterLegends.on("mouseout", function(d){
+            $(".cell").removeClass("active cellHover");
+        });
+
+        patients.on("mouseover", function(d){
+            $(".row").addClass("rowHover").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        patients.on("mouseout", function(d){
+            $(".row").removeClass("active rowHover");
+        });
+
     });
 })
