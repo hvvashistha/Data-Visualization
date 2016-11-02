@@ -4,13 +4,24 @@ var minHPixelWidth = 4,
     minVPixelWidth = 15;
 var cellPadding = 0.5;
 
-// Ref:
-// Implementation by Pimp Trizkit : shadeColor2()
+function color(encounters, step){
+    return color.shade(color.colors(encounters), color.scale(step || 0));
+}
+
+color.colors = d3.scale.category20();
+color.scale = d3.scale.linear().range([-0.85, 0.6]);
+
+// Implementation for color value (lightness) by Pimp Trizkit, ref function: shadeColor2()
 // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
-function shade(color, percent) {
+color.shade = function(color, percent) {
     var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
     return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
+
+//Remove unwanted colors
+color.colors.range().splice(color.colors.range().indexOf("#7f7f7f"), 1);
+color.colors.range().splice(color.colors.range().indexOf("#c7c7c7"), 1);
+color.colors.range().splice(color.colors.range().indexOf("#c5b0d5"), 1);
 
 $(function(){
     EHRdataset(function(data){
@@ -19,21 +30,11 @@ $(function(){
 
         var yScale = d3.scale.ordinal();
 
-        function color(encounters, step){
-            return shade(color.colors(encounters), color.scale(step || 0));
-        }
-
-        color.colors = d3.scale.category20();
-        color.scale = d3.scale.linear().domain([-data.maxPreTBIDays, data.maxPostTBIDays]).range([-0.85, 0.6]);
-
-        //Remove unwanted colors
-        color.colors.range().splice(color.colors.range().indexOf("#7f7f7f"), 1);
-        color.colors.range().splice(color.colors.range().indexOf("#c7c7c7"), 1);
-        color.colors.range().splice(color.colors.range().indexOf("#c5b0d5"), 1);
-
         yScale.domain(data.patients.map(function(d){
            return d.patientID;
         }));
+
+        color.scale.domain([-data.maxPreTBIDays, data.maxPostTBIDays]);
 
         var vItemCount = yScale.domain().length;
         var hItemCount = data.maxLeft + data.maxRight;
@@ -59,12 +60,16 @@ $(function(){
             .tickFormat(function(d){
                 return d;
             })
-            .tickSize(0)
+            .tickSize(3, 0)
             .scale(yScale);
 
         var xAxis = d3.svg.axis()
             .orient("bottom")
-            .ticks(0)
+            .tickValues([data.maxLeft])
+            .tickFormat(function(d){
+                return "1st TBI Encounter";
+            })
+            .tickSize(-height, 0)
             .scale(xScale);
 
         var svg = d3.select("#vizCanvas")
@@ -160,15 +165,6 @@ $(function(){
         svg.append("g")
             .attr("class", "y axis")
             .call(yAxis);
-
-        // svg.append("line")
-        //     .attr("class", "TBImark")
-        //     .attr("x1", xScale(0))
-        //     .attr("x2", xScale(0))
-        //     .attr("y1", 0)
-        //     .attr("y2", height)
-        //     .attr("stroke", "#000")
-        //     .attr("stroke-width", "1");
 
         var encounterLegends = d3.select(".legends.primary .legendsBody")
             .selectAll(".legendCell")

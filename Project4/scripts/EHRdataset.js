@@ -16,6 +16,9 @@ function EHRdataset(callback) {
             leftItemCount = rightItemCount = 0;
             patients.push({
                 patientID: parsedCSV[patient].PatientID,
+                gender: parsedCSV[patient].Gender,
+                age: parsedCSV[patient].Age,
+                dateOfInjury: new Date(parsedCSV[patient]["Date of Injury"]),
                 leftItems: 0,
                 encounters: []
             });
